@@ -1,0 +1,17 @@
+@client.event
+async def on_ready():
+    channel = client.get_channel(CHANNEL_ID)
+    await channel.send("Bot is ready")
+    while not client.is_closed():
+        now = datetime.now(JST)
+        target_time = now.replace(hour=Hour, minute=Minute, second=Second)
+
+
+        if now > target_time:
+            target_time += timedelta(days=1)
+
+        wait_time = (target_time - now).total_seconds()
+
+        await asyncio.sleep(wait_time)
+        try: 
+            await send_message()
