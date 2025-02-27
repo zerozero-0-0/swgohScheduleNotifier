@@ -10,9 +10,9 @@ import os
 JST = ZoneInfo("Asia/Tokyo")
 
 
-TOKEN = os.getenv('DISCORD_BOT_TOKEN')
+TOKEN = os.getenv('SWGOH_SCHEDULE_NOTIFIER_DISCORD_BOT_TOKEN')
 
-CHANNEL_ID = int(os.getenv('CHANNEL_ID'))
+CHANNEL_ID = int(os.getenv('SWGOH_SCHEDULE_NOTIFIER_CHANNEL_ID'))
 
 Hour = 6
 Minute = 0
@@ -127,7 +127,6 @@ def index():
 @client.event
 async def on_ready():
     channel = client.get_channel(CHANNEL_ID)
-    print('success login')
     await channel.send('success login')
     while not client.is_closed():
         now = datetime.now(JST)
