@@ -1,7 +1,4 @@
 import discord
-from discord.ext import commands
-import schedule
-import time
 from datetime import datetime
 import requests
 import asyncio
@@ -15,7 +12,7 @@ JST = ZoneInfo("Asia/Tokyo")
 
 TOKEN = os.getenv('DISCORD_BOT_TOKEN')
 
-CHANNEL_ID = os.getenv('CHANNEL_ID')
+CHANNEL_ID = int(os.getenv('CHANNEL_ID'))
 
 Hour = 6
 Minute = 0
@@ -127,5 +124,27 @@ def index():
 
     return todays_events
 
-output = index()
-print(output)
+@client.event
+async def on_ready():
+    channel = client.get_channel(CHANNEL_ID)
+    print('success login')
+    await channel.send('success login')
+    while not client.is_closed():
+        now = datetime.now(JST)
+        target_time = now.replace(hour=Hour, minute=Minute, second=Second)
+
+
+        if now > target_time:
+            target_time += timedelta(days=1)
+
+        wait_time = (target_time - now).total_seconds()
+
+        await asyncio.sleep(wait_time)
+        try: 
+            message = index()
+            await channel.send(message)
+        except Exception as e:
+            await channel.send(e)
+
+
+client.run(TOKEN)
